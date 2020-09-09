@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "totemplus",
+  "version": "${version}",
+
+  "name": "Totem Plus",
+  "description": "Introduce more features to Totem!",
+  "authors": [
+    "Conn_Lost"
+  ],
+  "contact": {
+    "homepage": "",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/totemplus/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.connlost.totemplus.TotemPlussInit"
+    ]
+  },
+  "mixins": [
+    "totemplus.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
