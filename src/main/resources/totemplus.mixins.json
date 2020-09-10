@@ -4,6 +4,8 @@
   "package": "me.connlost.totemplus.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinDamageSource",
+    "MixinLivingEntity"
   ],
   "client": [
     

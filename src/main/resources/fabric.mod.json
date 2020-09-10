@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.connlost.totemplus.TotemPlussInit"
+      "me.connlost.totemplus.TotemPlusInit"
     ]
   },
   "mixins": [
