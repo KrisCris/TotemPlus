@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinDamageSource",
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinEntity",
+    "MixinPlayerEntity"
   ],
   "client": [
     
