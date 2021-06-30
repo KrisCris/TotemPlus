@@ -5,9 +5,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.ArrayList;
+import java.util.Queue;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends Entity implements IPlayerEntity {
@@ -16,23 +18,25 @@ public abstract class MixinPlayerEntity extends Entity implements IPlayerEntity 
         super(type, world);
     }
 
-    private BlockPos[] lastOnGroundPos = new BlockPos[2];
+    private ArrayList<BlockPos> lastOnGroundPos = new ArrayList<>();
 
 
     @Override
-    public BlockPos[] getLastBlockPos(){
-        if (lastOnGroundPos[0] == null)
-            lastOnGroundPos[0] = this.getBlockPos();
-        if (lastOnGroundPos[1] == null)
-            lastOnGroundPos[1] = lastOnGroundPos[0];
+    public ArrayList<BlockPos> getLastBlockPos(){
         return lastOnGroundPos;
     }
 
     @Override
     public void setLastBlockPos(BlockPos pos) {
-        if (!pos.equals(lastOnGroundPos[0])){
-            lastOnGroundPos[1] = lastOnGroundPos[0];
-            lastOnGroundPos[0] = pos;
+        if (lastOnGroundPos.size()>0){
+            if (lastOnGroundPos.get(lastOnGroundPos.size()-1).equals(pos)){
+                return;
+            }
+        }
+        lastOnGroundPos.add(pos);
+
+        if(lastOnGroundPos.size()>100){
+            lastOnGroundPos.remove(0);
         }
     }
 }

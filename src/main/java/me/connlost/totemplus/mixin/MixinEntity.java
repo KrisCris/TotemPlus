@@ -20,7 +20,6 @@ public class MixinEntity {
             PlayerEntity player = ((PlayerEntity)that);
             if (player.isOnGround()){
                 ((IPlayerEntity)player).setLastBlockPos(player.getBlockPos());
-                System.out.println(player.getBlockPos());
             }
         }
     }

@@ -1,51 +1,43 @@
 package me.connlost.totemplus.util;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+
+import java.util.ArrayList;
 
 public class TotemFeatures {
     public static void reviveFromVoid(Entity player) {
         player.setVelocity(0, 0, 0);
-        player.refreshPositionAfterTeleport(findSavePos(player));
+        player.refreshPositionAfterTeleport(findSafePos(player));
         if (player instanceof LivingEntity) {
-            ((LivingEntity)player).addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 100, 1));
+            ((LivingEntity) player).addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 100, 1));
             ((LivingEntity) player).addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 200, 1));
         }
     }
 
-    public static Vec3d findSavePos(Entity player) {
-        if (player instanceof PlayerEntity) {
-            BlockPos[] blockPoses = ((IPlayerEntity) player).getLastBlockPos();
-            BlockState blockState0 = player.world.getBlockState(blockPoses[0].down());
-            BlockState blockState1 = player.world.getBlockState(blockPoses[1].down());
-            Vec3d lastSafePos;
+    public static Vec3d findSafePos(Entity player) {
+        ArrayList<BlockPos> blockPoses = ((IPlayerEntity) player).getLastBlockPos();
+        for (int i = blockPoses.size() - 1; i >= 0; i--) {
+            if (player.world.getBlockState(blockPoses.get(i).down()).isAir()) continue;
+            return new Vec3d(blockPoses.get(i).getX(), blockPoses.get(i).getY(), blockPoses.get(i).getZ());
+        }
 
-            if (blockState0.isAir()) {
-                if (blockState1.isAir()){
-                    System.out.println("in");
-                    BlockPos pos0= blockPoses[0];
-                    pos0 = pos0.up(4);
-                    for (int i = 8; i > 0; i--) {
-                        BlockState state = player.world.getBlockState(pos0.up(1));
-                        if (state.isAir()) {
-                            break;
-                        }
-                        pos0 = pos0.down();
-                    }
-                }
-                lastSafePos = new Vec3d(blockPoses[1].getX(),blockPoses[1].getY(),blockPoses[1].getZ());
-
-            } else {
-                lastSafePos = new Vec3d(blockPoses[0].getX(),blockPoses[0].getY(),blockPoses[0].getZ());
+        // fallback
+        if (!player.world.getBlockState(new BlockPos(0, 64, 0)).isAir()) {
+            for (int i = 65; i < 256; i++) {
+                if (!player.world.getBlockState(new BlockPos(0, i, 0)).isAir()) continue;
+                return new Vec3d(0, i, 0);
             }
-
-            return lastSafePos;
+        }
+        if (player.world.getBlockState(new BlockPos(0, 63, 0)).isAir()) {
+            for (int i = 62; i > 0; i--) {
+                if (player.world.getBlockState(new BlockPos(0, i, 0)).isAir()) continue;
+                return new Vec3d(0, i + 1, 0);
+            }
         }
         return new Vec3d(0, 70, 0);
     }

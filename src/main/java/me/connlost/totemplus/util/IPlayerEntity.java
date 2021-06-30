@@ -2,7 +2,9 @@ package me.connlost.totemplus.util;
 
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
+
 public interface IPlayerEntity {
-    public BlockPos[] getLastBlockPos();
+    public ArrayList<BlockPos> getLastBlockPos();
     public void setLastBlockPos(BlockPos pos);
 }
